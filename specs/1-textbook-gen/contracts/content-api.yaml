@@ -1,0 +1,234 @@
+openapi: 3.0.3
+info:
+  title: Textbook Content Management API
+  description: API for managing textbook content and metadata
+  version: 1.0.0
+servers:
+  - url: https://api.textbook-content.example.com
+    description: Production server
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /chapters:
+    get:
+      summary: List all textbook chapters
+      description: Retrieve a list of all available textbook chapters
+      responses:
+        '200':
+          description: List of chapters successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapters:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Chapter'
+        '500':
+          description: Server error
+
+  /chapters/{chapter_id}:
+    get:
+      summary: Get chapter details
+      description: Retrieve details for a specific textbook chapter
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the chapter
+      responses:
+        '200':
+          description: Chapter details successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+        '404':
+          description: Chapter not found
+        '500':
+          description: Server error
+
+  /chapters/{chapter_id}/chunks:
+    get:
+      summary: Get content chunks for a chapter
+      description: Retrieve all content chunks for a specific chapter
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the chapter
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+          description: Maximum number of chunks to return
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+          description: Number of chunks to skip
+      responses:
+        '200':
+          description: Chapter chunks successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chunks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContentChunk'
+                  total:
+                    type: integer
+                    description: Total number of chunks available
+        '404':
+          description: Chapter not found
+        '500':
+          description: Server error
+
+  /search:
+    get:
+      summary: Search textbook content
+      description: Search across all textbook content using keywords
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Maximum number of results to return
+      responses:
+        '200':
+          description: Search results successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SearchResult'
+        '400':
+          description: Invalid search query
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Chapter:
+      type: object
+      required:
+        - chapter_id
+        - title
+      properties:
+        chapter_id:
+          type: string
+          description: Unique identifier for the chapter
+        title:
+          type: string
+          description: Title of the chapter
+        learning_objectives:
+          type: array
+          items:
+            type: string
+          description: List of learning objectives for the chapter
+        apa_references:
+          type: array
+          items:
+            type: string
+          description: List of APA-formatted references
+        chunking_strategy:
+          type: string
+          description: Strategy used for chunking the content
+        embedding_ready:
+          type: boolean
+          description: Whether the chapter is ready for embedding
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    ContentChunk:
+      type: object
+      required:
+        - chunk_id
+        - content
+      properties:
+        chunk_id:
+          type: string
+          description: Unique identifier for the chunk
+        chapter_id:
+          type: string
+          description: Reference to parent chapter
+        content:
+          type: string
+          description: Content of the chunk
+        char_offset:
+          type: integer
+          description: Character offset in original document
+        length:
+          type: integer
+          description: Length of the chunk in characters
+        source_url:
+          type: string
+          description: URL to the original content location
+        text_hash:
+          type: string
+          description: Hash of the text content
+        embedding_vector_id:
+          type: string
+          description: Reference to vector in Qdrant
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+
+    SearchResult:
+      type: object
+      properties:
+        chunk_id:
+          type: string
+          description: Unique identifier for the matching chunk
+        chapter_id:
+          type: string
+          description: Reference to parent chapter
+        title:
+          type: string
+          description: Title of the chapter
+        content_preview:
+          type: string
+          description: Preview of the matching content
+        relevance_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Relevance score of the match
+        char_range:
+          type: array
+          items:
+            type: integer
+          description: Character range [start, end] of the match

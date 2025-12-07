@@ -1,0 +1,125 @@
+/**
+ * CSS module for chapter cards
+ */
+
+.chapterCardsContainer {
+  padding: 2rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chapterCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.chapterCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chapterCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.chapterCardHeader {
+  background: linear-gradient(135deg, #4f6ef7, #6a89ff);
+  color: white;
+  padding: 1.5rem;
+}
+
+.chapterCardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.chapterCardNumber {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.chapterCardBody {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.chapterCardDescription {
+  color: #606060;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.chapterCardFooter {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.chapterCardLink {
+  display: inline-block;
+  background: #4f6ef7;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.chapterCardLink:hover {
+  background: #3a56d4;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chapterCardsGrid {
+    grid-template-columns: 1fr;
+    padding: 0 0.5rem;
+  }
+
+  .chapterCardHeader {
+    padding: 1rem;
+  }
+
+  .chapterCardBody {
+    padding: 1rem;
+  }
+}
+
+/* Features section styling */
+.featuresSection {
+  padding: 3rem 0;
+  background-color: #f8f9fa;
+}
+
+.featuresSection .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featuresSection .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+}
+
+.featuresSection .col {
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+  flex: 1 1 300px;
+  min-width: 300px;
+}

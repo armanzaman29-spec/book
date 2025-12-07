@@ -1,0 +1,223 @@
+openapi: 3.0.3
+info:
+  title: Textbook RAG API
+  description: API for the AI-Native Textbook with RAG chatbot functionality
+  version: 1.0.0
+servers:
+  - url: https://api.textbook-rag.example.com
+    description: Production server
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /ingest:
+    post:
+      summary: Ingest textbook content for embedding
+      description: Process textbook chapters and prepare for vector storage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - chapter_ids
+              properties:
+                chapter_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: List of chapter IDs to ingest
+                force_reprocess:
+                  type: boolean
+                  default: false
+                  description: Whether to reprocess content even if already embedded
+      responses:
+        '200':
+          description: Content successfully ingested
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  processed_chunks:
+                    type: integer
+                    example: 45
+                  message:
+                    type: string
+                    example: "45 content chunks processed and ready for embedding"
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+
+  /embed:
+    post:
+      summary: Generate embeddings for content chunks
+      description: Create vector embeddings for content chunks using Gemini API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - chunk_ids
+              properties:
+                chunk_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: List of chunk IDs to generate embeddings for
+      responses:
+        '200':
+          description: Embeddings successfully generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  embedded_chunks:
+                    type: integer
+                    example: 45
+                  message:
+                    type: string
+                    example: "45 embeddings generated and stored in vector database"
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+
+  /query:
+    post:
+      summary: General RAG query against textbook content
+      description: Ask questions about textbook content with vector search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question
+              properties:
+                question:
+                  type: string
+                  description: Question about textbook content
+                  example: "What are the key principles of humanoid locomotion?"
+                user_id:
+                  type: string
+                  description: Optional user identifier for personalization
+                max_sources:
+                  type: integer
+                  default: 3
+                  description: Maximum number of sources to include in answer
+      responses:
+        '200':
+          description: Query successfully processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                    description: Generated answer based on textbook content
+                  sources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Source'
+                  confidence:
+                    type: number
+                    format: float
+                    minimum: 0
+                    maximum: 1
+                    description: Confidence score of the answer
+                  query_id:
+                    type: string
+                    description: Unique identifier for the query
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+
+  /select-query:
+    post:
+      summary: Selection-only mode query
+      description: Answer questions using only the provided selected text
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - selected_text
+                - question
+              properties:
+                selected_text:
+                  type: string
+                  description: Text that was selected by the user
+                  example: "Humanoid locomotion requires precise balance control through feedback systems..."
+                question:
+                  type: string
+                  description: Question about the selected text
+                  example: "How does this relate to control systems?"
+                user_id:
+                  type: string
+                  description: Optional user identifier
+      responses:
+        '200':
+          description: Query successfully processed using only selected text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                    description: Generated answer based only on selected text
+                  sources:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Source'
+                  confidence:
+                    type: number
+                    format: float
+                    minimum: 0
+                    maximum: 1
+                    description: Confidence score of the answer
+                  query_id:
+                    type: string
+                    description: Unique identifier for the query
+        '400':
+          description: Invalid request
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    Source:
+      type: object
+      properties:
+        chapter_id:
+          type: string
+          description: ID of the chapter
+        section_id:
+          type: string
+          description: ID of the section within the chapter
+        char_range:
+          type: array
+          items:
+            type: integer
+          description: Character range [start, end] in the original content
+          example: [100, 250]
+        text_preview:
+          type: string
+          description: Preview of the source text
