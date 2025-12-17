@@ -21,6 +21,21 @@ const sidebars = {
           type: 'doc',
           id: 'human-inspired-design/chapter',
           label: 'Human-Inspired Design Principles'
+        },
+        {
+          type: 'doc',
+          id: 'perception-systems/chapter',
+          label: 'Perception Systems'
+        },
+        {
+          type: 'doc',
+          id: 'ai-deep-learning/chapter',
+          label: 'AI & Deep Learning'
+        },
+        {
+          type: 'doc',
+          id: 'humanoid-locomotion/chapter',
+          label: 'Humanoid Locomotion'
         }
       ]
     }

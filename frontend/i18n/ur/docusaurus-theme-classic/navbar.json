@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "کتاب",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "کتاب کا لوگو",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Textbook": {
+    "message": "کتاب",
+    "description": "Navbar item with label Textbook"
+  },
+  "item.label.GitHub": {
+    "message": "گیت ہب",
+    "description": "Navbar item with label GitHub"
+  }
+}

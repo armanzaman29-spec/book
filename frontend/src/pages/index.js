@@ -47,6 +47,27 @@ const chapters = [
     title: 'Human-Inspired Design Principles in Humanoid Robotics',
     description: 'Exploring how biological systems inspire humanoid robotic design. Learn about biomimicry, human-inspired cognitive systems, and challenges in human-inspired design.',
     path: '/docs/human-inspired-design/chapter'
+  },
+  {
+    id: 4,
+    number: 'Chapter 4',
+    title: 'Perception Systems',
+    description: 'Explore the sensory systems that enable robots to understand their environment. Learn about computer vision, sensor fusion, and real-time perception algorithms for robotics applications.',
+    path: '/docs/perception-systems/chapter'
+  },
+  {
+    id: 5,
+    number: 'Chapter 5',
+    title: 'AI & Deep Learning',
+    description: 'Understanding the role of artificial intelligence and deep learning in modern robotics. Explore neural networks, reinforcement learning, and their applications in robotic systems.',
+    path: '/docs/ai-deep-learning/chapter'
+  },
+  {
+    id: 6,
+    number: 'Chapter 6',
+    title: 'Humanoid Locomotion',
+    description: 'Study the principles of movement and locomotion in humanoid robots. Learn about bipedal walking, balance control, and dynamic motion planning for human-like robotic systems.',
+    path: '/docs/humanoid-locomotion/chapter'
   }
 ];
 
